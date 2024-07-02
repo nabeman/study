@@ -1,12 +1,23 @@
 html, body {
     width: 100%;
     height: 100%;
+    margin: 0;
 }
 
-#canvas {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
+#screen-log{
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+}
+
+#rate {
+    position: fixed;
+    top: 0.5rem;
+    left: 0.5rem;
+}
+
+#btn{
+    position: fixed;
+    top: 0.5rem;
+    left: 12.0rem;
 }
