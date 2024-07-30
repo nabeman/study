@@ -1,17 +1,23 @@
 canvas.addEventListener('pointermove', getMouse);
 canvas.addEventListener('pointerdown', start);
 canvas.addEventListener('pointerup', stop);
+
 const btn = document.getElementById("btn");
+const startbtn = document.getElementById("start");
+
 btn.addEventListener("click", change);
+startbtn.addEventListener("click", getTime);
+
 let screenlog = document.querySelector('#screen-log')
 const ctx = canvas.getContext("2d");
 let count = 0;
-let RATE = 33.33333333333
+let RATE = 16.6666666666666
 //ペン先が触れているかどうかのフラグ
 let FLAG = false;
 const style = { color:"black", diameter: 10 }
 let x = 0;
 let y = 0;
+let json = []
 
 setInterval(() => {
     screenlog.innerText = `
@@ -21,19 +27,15 @@ setInterval(() => {
         const pointSize = 5;
         ctx.fillStyle = style.color;
         ctx.fillRect(x, y, pointSize, pointSize);
+        json.push({"x": x, "y": y, "time":Time()});
         console.log({"x": x, "y": y, "time":Time()});
-        console.log(count);
-        count++;
-    }
-}, RATE)
+    };
+}, RATE);
 
 function getMouse(e){
     if(FLAG){
         x = e.pageX;
         y = e.pageY;
-
-        // console.log(count);
-        // count++;
     }
 }
 
@@ -65,6 +67,20 @@ function change(){
     const input = document.getElementById("rate");
     const tmp = input.Value;
     RATE = tmp;
+}
+
+function getTime(){
+    console.log(Date.now());
+    eel.Capture();
+}
+
+eel.expose(MakeJson);
+function MakeJson(){
+    const fileName = "test.json";
+    const link = document.createElement("a");
+    link.href = "data:text/plain," + encodeURIComponent(JSON.stringify(json));
+    link.download = fileName;
+    link.click();
 }
 // async function draw(){
 //     const pointSize = 5;

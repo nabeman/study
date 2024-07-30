@@ -1,0 +1,1 @@
+C:\Users\tkmco\study\env\Scripts\activate.bat

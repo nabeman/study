@@ -21,3 +21,9 @@ html, body {
     top: 0.5rem;
     left: 12.0rem;
 }
+
+#start{
+    position: fixed;
+    top: 0.5rem;
+    left: 16.5rem;
+}
