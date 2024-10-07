@@ -39,7 +39,7 @@ function draw() {
   
   if(keyIsPressed){
     let temporary_list = []
-    let center = [];
+    let center_point = [0, 0];
     let cog = [];
     switch(key){
       case "a":
@@ -95,20 +95,19 @@ function draw() {
       case "-":
         background(200);
         //重心を求める center of gravitiy(cog)
-        center = [0, 0];
         for(let i = 0; i < stroke_list.length; i++){
           let center_x = (stroke_list[i][0] + stroke_list[i][2]) / 2;
           let center_y = (stroke_list[i][1] + stroke_list[i][3]) / 2;
-          center = [center[0] + center_x, center[1] + center_y];
+          center_point = [center_point[0] + center_x, center_point[1] + center_y];
         }
-        cog = [center[0] / stroke_list.length, center[1] / stroke_list.length];
+        cog = [center_point[0] / stroke_list.length, center_point[1] / stroke_list.length];
 
         for(let i = 0; i < stroke_list.length; i++){
-          let x_1 = stroke_list[i][0] + (cog[0] - stroke_list[i][0]) * (1 - MINUS_RATIO);
-          let y_1 = stroke_list[i][1] + (cog[1] - stroke_list[i][1]) * (1 - MINUS_RATIO);
+          let x_1 = stroke_list[i][0] + (cog[0] - stroke_list[i][0]) * (MINUS_RATIO);
+          let y_1 = stroke_list[i][1] + (cog[1] - stroke_list[i][1]) * (MINUS_RATIO);
           
-          let x_2 = stroke_list[i][2] + (cog[0] - stroke_list[i][2]) * (1 - MINUS_RATIO);
-          let y_2 = stroke_list[i][3] + (cog[1] - stroke_list[i][3]) * (1 - MINUS_RATIO);
+          let x_2 = stroke_list[i][2] + (cog[0] - stroke_list[i][2]) * (MINUS_RATIO);
+          let y_2 = stroke_list[i][3] + (cog[1] - stroke_list[i][3]) * (MINUS_RATIO);
           
           line(x_1, y_1, x_2, y_2);
           temporary_list.push([x_1, y_1, x_2, y_2]);
@@ -116,35 +115,35 @@ function draw() {
 
         stroke_list = temporary_list;
         temporary_list = [];
-        center = []
+        center_point = [0, 0]
         break;
       
-      // case ";":
-      //   background(200);
-      //   //重心を求める center of gravitiy(cog)
-      //   for(let i = 0; i < stroke_list.length; i++){
-      //     let center_x = (stroke_list[i][0] + stroke_list[i][2]) / 2;
-      //     let center_y = (stroke_list[i][1] + stroke_list[i][3]) / 2;
-      //     center = [center[0] + center_x, center[1] + center_y];
-      //   }
-      //   cog = [center[0] / stroke_list.length, center[1] / stroke_list.length];
+      case ";":
+        background(200);
+        //重心を求める center of gravitiy(cog)
+        for(let i = 0; i < stroke_list.length; i++){
+          let center_x = (stroke_list[i][0] + stroke_list[i][2]) / 2;
+          let center_y = (stroke_list[i][1] + stroke_list[i][3]) / 2;
+          center_point = [center_point[0] + center_x, center_point[1] + center_y];
+        }
+        cog = [center_point[0] / stroke_list.length, center_point[1] / stroke_list.length];
 
-      //   for(let i = 0; i < stroke_list.length; i++){
-      //     let x_1 = stroke_list[i][0] + (cog[0] - stroke_list[i][0]) * (1 + PLUS_RATIO);
-      //     let y_1 = stroke_list[i][1] + (cog[1] - stroke_list[i][1]) * (1 + PLUS_RATIO);
+        for(let i = 0; i < stroke_list.length; i++){
+          let x_1 = stroke_list[i][0] - (cog[0] - stroke_list[i][0]) * (PLUS_RATIO);
+          let y_1 = stroke_list[i][1] - (cog[1] - stroke_list[i][1]) * (PLUS_RATIO);
           
-      //     let x_2 = stroke_list[i][2] + (cog[0] - stroke_list[i][2]) * (1 + PLUS_RATIO);
-      //     let y_2 = stroke_list[i][3] + (cog[1] - stroke_list[i][3]) * (1 + PLUS_RATIO);
+          let x_2 = stroke_list[i][2] - (cog[0] - stroke_list[i][2]) * (PLUS_RATIO);
+          let y_2 = stroke_list[i][3] - (cog[1] - stroke_list[i][3]) * (PLUS_RATIO);
           
-      //     line(x_1, y_1, x_2, y_2);
-      //     temporary_list.push([x_1, y_1, x_2, y_2]);
-      //   }
+          line(x_1, y_1, x_2, y_2);
+          temporary_list.push([x_1, y_1, x_2, y_2]);
+        }
 
-      //   stroke_list = temporary_list;
-      //   temporary_list = [];
-      //   center = [0, 0];
-      //   break;
-
+        stroke_list = temporary_list;
+        temporary_list = [];
+        center_point = [0, 0];
+        break;
+        
       default:
         break;
     }
