@@ -1,5 +1,7 @@
 // https://editor.p5js.org/
 
+// https://editor.p5js.org/
+
 let x = 300;
 let y = 300;
 
@@ -9,12 +11,14 @@ let targetY;
 let stroke_list = []
 
 const MOVERANGE = 5
-const PLUS_RATIO = 0.1;
-const MINUS_RATIO = 0.1;
+const PLUS_RATIO = 0.07;
+const MINUS_RATIO = 0.07;
+const THETA = 2;
 
 function setup() {
   createCanvas(1000, 1000);
   background(220);
+  frameRate(120)
 //   noStroke();
 }
 
@@ -127,6 +131,7 @@ function draw() {
           center_point = [center_point[0] + center_x, center_point[1] + center_y];
         }
         cog = [center_point[0] / stroke_list.length, center_point[1] / stroke_list.length];
+        console.log(cog)
 
         for(let i = 0; i < stroke_list.length; i++){
           let x_1 = stroke_list[i][0] - (cog[0] - stroke_list[i][0]) * (PLUS_RATIO);
@@ -138,7 +143,75 @@ function draw() {
           line(x_1, y_1, x_2, y_2);
           temporary_list.push([x_1, y_1, x_2, y_2]);
         }
-
+        
+        stroke_list = temporary_list;
+        temporary_list = [];
+        center_point = [0, 0];
+        break;
+        
+      case "r":
+        background(200);
+        rad = THETA * (Math.PI / 180)
+        //ストロークの中心を求める
+        for(let i = 0; i < stroke_list.length; i++){
+          let center_x = (stroke_list[i][0] + stroke_list[i][2]) / 2;
+          let center_y = (stroke_list[i][1] + stroke_list[i][3]) / 2;
+          center_point = [center_point[0] + center_x, center_point[1] + center_y];
+        }
+        cog = [center_point[0] / stroke_list.length, center_point[1] / stroke_list.length];
+        console.log(center_point)
+        //原点に移動させる
+        for(let i = 0; i < stroke_list.length; i++){
+            let x_1 = stroke_list[i][0] - cog[0];
+            let y_1 = stroke_list[i][1] - cog[1];
+          
+            let x_2 = stroke_list[i][2] - cog[0];
+            let y_2 = stroke_list[i][3] - cog[1];
+          
+            // let rotate_matrix = [[Math.cos(rad), -Math.sin(rad)],[Math.sin(rad), Math.cos(rad)]];
+            let rx_1 = (x_1 * Math.cos(rad) - y_1 * Math.sin(rad)) + cog[0];
+            let ry_1 = (x_1 * Math.sin(rad) + y_1 * Math.cos(rad)) + cog[1];
+            let rx_2 = (x_2 * Math.cos(rad) - y_2 * Math.sin(rad)) + cog[0];
+            let ry_2 = (x_2 * Math.sin(rad) + y_2 * Math.cos(rad)) + cog[1];
+          
+            line(rx_1, ry_1, rx_2, ry_2);
+            // console.log([x_1, y_1, x_2, y_2])
+            temporary_list.push([rx_1, ry_1, rx_2, ry_2]);
+        }
+        stroke_list = temporary_list;
+        temporary_list = [];
+        center_point = [0, 0];
+        break;
+        
+      case "e":
+        background(200);
+        rad = -THETA * (Math.PI / 180)
+        //ストロークの中心を求める
+        for(let i = 0; i < stroke_list.length; i++){
+          let center_x = (stroke_list[i][0] + stroke_list[i][2]) / 2;
+          let center_y = (stroke_list[i][1] + stroke_list[i][3]) / 2;
+          center_point = [center_point[0] + center_x, center_point[1] + center_y];
+        }
+        cog = [center_point[0] / stroke_list.length, center_point[1] / stroke_list.length];
+        console.log(center_point)
+        //原点に移動させる
+        for(let i = 0; i < stroke_list.length; i++){
+            let x_1 = stroke_list[i][0] - cog[0];
+            let y_1 = stroke_list[i][1] - cog[1];
+          
+            let x_2 = stroke_list[i][2] - cog[0];
+            let y_2 = stroke_list[i][3] - cog[1];
+          
+            // let rotate_matrix = [[Math.cos(rad), -Math.sin(rad)],[Math.sin(rad), Math.cos(rad)]];
+            let rx_1 = (x_1 * Math.cos(rad) - y_1 * Math.sin(rad)) + cog[0];
+            let ry_1 = (x_1 * Math.sin(rad) + y_1 * Math.cos(rad)) + cog[1];
+            let rx_2 = (x_2 * Math.cos(rad) - y_2 * Math.sin(rad)) + cog[0];
+            let ry_2 = (x_2 * Math.sin(rad) + y_2 * Math.cos(rad)) + cog[1];
+          
+            line(rx_1, ry_1, rx_2, ry_2);
+            // console.log([x_1, y_1, x_2, y_2])
+            temporary_list.push([rx_1, ry_1, rx_2, ry_2]);
+        }
         stroke_list = temporary_list;
         temporary_list = [];
         center_point = [0, 0];
