@@ -5,18 +5,20 @@
   <!-- we import arjs version without NFT but with marker + location based support -->
   <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
   <body style="margin : 0px; overflow: hidden;">
+    <canvas id="canvas"></canvas>
     <a-scene embedded arjs>
       <a-marker type="pattern" url="pattern-marker.patt">
         <a-box color="#0095DD" position="0 1 0" rotation="20 40 0"> </a-box>
       </a-marker>
       <a-entity camera></a-entity>
     </a-scene>
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.11.0/lib/p5.min.js"></script>
+    <script src="p5.js"></script>
     <script>
       window.addEventListener('load', () => {
       const camera = document.querySelector('[camera]');
       const marker = document.querySelector('a-marker');
       let check;
-
       marker.addEventListener('markerFound', () => {
           let cameraPosition = camera.object3D.position;
           let markerPosition = marker.object3D.position;

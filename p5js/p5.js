@@ -14,8 +14,7 @@ const THETA = 2;
 const canvas = document.getElementById("canvas")
 
 function setup() {
-  createCanvas(1000, 1000, canvas);
-  background(220);
+  createCanvas(window.innerWidth, window.innerHeight, canvas);
   frameRate(120)
 //   noStroke();
 }
@@ -45,7 +44,7 @@ function draw() {
     let cog = [];
     switch(key){
       case "a":
-        background(220);
+        clear();
         break;
       
       case "z":
@@ -55,7 +54,7 @@ function draw() {
         break;
       
       case "ArrowDown":
-        background(220);
+        clear();
         for(let i = 0; i < stroke_list.length; i++){
           line(stroke_list[i][0], stroke_list[i][1] + MOVERANGE, stroke_list[i][2], stroke_list[i][3] + MOVERANGE);
           temporary_list.push([stroke_list[i][0], stroke_list[i][1] + MOVERANGE, stroke_list[i][2], stroke_list[i][3] + MOVERANGE]);
@@ -65,7 +64,7 @@ function draw() {
         break;
         
       case "ArrowUp":
-        background(220);
+        clear();
         for(let i = 0; i < stroke_list.length; i++){
           line(stroke_list[i][0], stroke_list[i][1] - MOVERANGE, stroke_list[i][2], stroke_list[i][3] - MOVERANGE);
           temporary_list.push([stroke_list[i][0], stroke_list[i][1] - MOVERANGE, stroke_list[i][2], stroke_list[i][3] - MOVERANGE]);
@@ -75,7 +74,7 @@ function draw() {
         break;
         
       case "ArrowLeft":
-        background(220);
+        clear();
         for(let i = 0; i < stroke_list.length; i++){
           line(stroke_list[i][0] - MOVERANGE, stroke_list[i][1], stroke_list[i][2] - MOVERANGE, stroke_list[i][3]);
           temporary_list.push([stroke_list[i][0] - MOVERANGE, stroke_list[i][1], stroke_list[i][2] - MOVERANGE, stroke_list[i][3]]);
@@ -85,7 +84,7 @@ function draw() {
         break;
       
       case "ArrowRight":
-        background(220);
+        clear();
         for(let i = 0; i < stroke_list.length; i++){
           line(stroke_list[i][0] + MOVERANGE, stroke_list[i][1], stroke_list[i][2] + MOVERANGE, stroke_list[i][3]);
           temporary_list.push([stroke_list[i][0] + MOVERANGE, stroke_list[i][1], stroke_list[i][2] + MOVERANGE, stroke_list[i][3]]);
@@ -95,7 +94,7 @@ function draw() {
         break;
       
       case "-":
-        background(200);
+        clear();
         //重心を求める center of gravitiy(cog)
         for(let i = 0; i < stroke_list.length; i++){
           let center_x = (stroke_list[i][0] + stroke_list[i][2]) / 2;
@@ -121,7 +120,7 @@ function draw() {
         break;
       
       case ";":
-        background(200);
+        clear();
         //重心を求める center of gravitiy(cog)
         for(let i = 0; i < stroke_list.length; i++){
           let center_x = (stroke_list[i][0] + stroke_list[i][2]) / 2;
@@ -148,7 +147,7 @@ function draw() {
         break;
         
       case "r":
-        background(200);
+        clear();
         rad = THETA * (Math.PI / 180)
         //ストロークの中心を求める
         for(let i = 0; i < stroke_list.length; i++){
@@ -182,7 +181,7 @@ function draw() {
         break;
         
       case "e":
-        background(200);
+        clear();
         rad = -THETA * (Math.PI / 180)
         //ストロークの中心を求める
         for(let i = 0; i < stroke_list.length; i++){
