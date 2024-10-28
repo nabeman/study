@@ -1,7 +1,13 @@
 body{
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 
 #canvas{
     position: absolute;
+    height: 900px;
+}
+
+.a-canvas{
+    position: absolute;
+    height: 100%;
 }

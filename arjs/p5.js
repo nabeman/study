@@ -8,16 +8,32 @@ let targetY;
 let stroke_list = []
 
 const MOVERANGE = 5
-const PLUS_RATIO = 0.05;
-const MINUS_RATIO = 0.05;
+const PLUS_RATIO = 0.07;
+const MINUS_RATIO = 0.07;
 const THETA = 2;
 const canvas = document.getElementById("canvas")
+// document.addEventListener("keydown", (e) => {
+//   if(e.key == "-"){
+//     key = "-";
+//   }
+//   if(e.key == ";"){
+//     key = ";";
+//   }
+// })
+
+function keyPressed(){
+
+}
 
 function setup() {
-  createCanvas(window.innerWidth, window.innerHeight, canvas);
+  createCanvas(windowWidth, 900, canvas);
   frameRate(120)
 //   noStroke();
 }
+
+// function windowResized(){
+//   resizeCanvas(windowWidth, windowHeight)
+// }
 
 function draw() {
   // background(220);
