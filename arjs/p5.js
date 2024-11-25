@@ -8,8 +8,8 @@ let targetY;
 let stroke_list = []
 
 const MOVERANGE = 5
-const PLUS_RATIO = 0.07;
-const MINUS_RATIO = 0.07;
+const PLUS_RATIO = 0.05;
+const MINUS_RATIO = 0.05;
 const THETA = 2;
 const canvas = document.getElementById("canvas")
 // document.addEventListener("keydown", (e) => {
@@ -26,8 +26,9 @@ function keyPressed(){
 }
 
 function setup() {
-  createCanvas(windowWidth, 900, canvas);
+  createCanvas(windowWidth, 1500, canvas);
   frameRate(120)
+  stroke(255, 255, 255)
 //   noStroke();
 }
 
@@ -144,7 +145,6 @@ function draw() {
           center_point = [center_point[0] + center_x, center_point[1] + center_y];
         }
         cog = [center_point[0] / stroke_list.length, center_point[1] / stroke_list.length];
-        console.log(cog)
 
         for(let i = 0; i < stroke_list.length; i++){
           let x_1 = stroke_list[i][0] - (cog[0] - stroke_list[i][0]) * (PLUS_RATIO);

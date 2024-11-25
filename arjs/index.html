@@ -21,14 +21,12 @@
       const marker = document.querySelector('a-marker');
       let check;
       let prev_distance = 0;
+      let prev_position = undefined;
 
-      document.addEventListener("keypress", (e) =>{
-      console.log(e.key);
-      })
       const canvas = document.getElementById("canvas");
       function sizing_stroke(distance){
         if(prev_distance == 0) keyIsPressed=false;
-
+        
         if(Math.abs(prev_distance - distance) < 0.15){
           keyIsPressed = false;
         }
@@ -45,6 +43,26 @@
         }
       }
 
+      function moving_stroke(position){
+        console.log(prev_position)
+        console.log(position)
+
+        if(prev_position == undefined || position == undefined){
+          keyIsPressed = false;
+          return
+        };
+        // if(Math.abs(position.x - prev_position.x) < 0.2){
+
+        // }
+        if(position.x - prev_position.x < 0){
+          key = "ArrowRight";
+          keyIsPressed = true;
+        }else{
+          key = "ArrowLeft";
+          keyIsPressed = true;
+        }
+      }
+
       marker.addEventListener('markerFound', () => {
           let cameraPosition = camera.object3D.position;
           let markerPosition = marker.object3D.position;
@@ -56,9 +74,14 @@
               distance = cameraPosition.distanceTo(markerPosition)
 
               // do what you want with the distance:
+              // console.log("-------------------------------")
               sizing_stroke(distance);
-              console.log(distance);
+              // moving_stroke(markerPosition);
+              // console.log(distance);
               prev_distance = distance;
+              prev_position = markerPosition;
+              // console.log("1:" + String(prev_position))
+              // console.log(markerPosition);
           }, 100);
       });
 
