@@ -27,7 +27,7 @@ function draw() {
     x = x + (mouseX - targetX);
     y = y + (mouseY - targetY);
     
-    strokeWeight(5);
+    strokeWeight(3);
     line(targetX, targetY, mouseX, mouseY);
     stroke_list.push([targetX, targetY, mouseX, mouseY]);
 
