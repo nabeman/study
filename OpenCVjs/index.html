@@ -32,16 +32,19 @@ let videoElement = document.getElementById('videosrc');
 
 // };
 
+window.addEventListener("load", function(){
+  let videoElement = document.getElementById('videosrc');
+  console.log("a");
+  console.log(cv.imread(videoElement));
+})
 
-let Module = {
+var Module = {
   // https://emscripten.org/docs/api_reference/module.html#Module.onRuntimeInitialized
   onRuntimeInitialized() {
     document.getElementById('status').innerHTML = 'OpenCV.js is ready.';
   }
 };
 
-console.log("a");
-console.log(cv.imread(videoElement));
 </script>
 <script async src="opencv.js" type="text/javascript"></script>
 </body>
