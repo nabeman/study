@@ -21,27 +21,13 @@
 <script type="text/javascript">
 let videoElement = document.getElementById('videosrc');
 let outputCanvas = document.getElementById("canvasOutput");
-let x = 0;
-let y = 0;
-outputCanvas.addEventListener("click", function(event){
-  let click_x = event.pageX;
-  let click_y = event.pageY;
-
-  let client_rect = this.getBoundingClientRect();
-  let position_x = client_rect.left + window.pageXOffset;
-  let position_y = client_rect.top + window.pageYOffset;
-
-  x = click_x - position_x;
-  y = click_y - position_y;
-  console.log(x, y)
-})
 
 window.addEventListener("load", function(){
   let video = document.getElementById('videosrc');
   let cap = new cv.VideoCapture(video);
 
   // parameters for ShiTomasi corner detection
-  let [maxCorners, qualityLevel, minDistance, blockSize] = [30, 0.3, 7, 7];
+  let [maxCorners, qualityLevel, minDistance, blockSize] = [3, 0.3, 7, 7];
 
   // parameters for lucas kanade optical flow
   let winSize = new cv.Size(15, 15);
@@ -62,10 +48,30 @@ window.addEventListener("load", function(){
   let oldGray = new cv.Mat();
   // oldFrameをグレースケール化してoldGrayに格納
   cv.cvtColor(oldFrame, oldGray, cv.COLOR_RGB2GRAY);
-  let p0 = new cv.Mat();
+  let p0 = new cv.Mat(1, 1, cv.CV_32FC2);
+  // let p0 = new cv.Mat();
   let none = new cv.Mat();
-  cv.goodFeaturesToTrack(oldGray, p0, maxCorners, qualityLevel, minDistance, none, blockSize);
+  let x = 0;
+  let y = 0;
 
+  let features = false;
+  outputCanvas.addEventListener("click", function(event){
+      let click_x = event.pageX;
+      let click_y = event.pageY;
+
+      let client_rect = this.getBoundingClientRect();
+      let position_x = client_rect.left + window.pageXOffset;
+      let position_y = client_rect.top + window.pageYOffset;
+
+      x = click_x - position_x;
+      y = click_y - position_y;
+      
+      p0.data32F[0] = x;
+      p0.data32F[1] = y;
+  })
+  // oldGray に検出した特徴点の座標を記録？
+  cv.goodFeaturesToTrack(oldGray, p0, maxCorners, qualityLevel, minDistance, none, blockSize);
+  console.log(p0.data32F)
   // Create a mask image for drawing purposes
   let zeroEle = new cv.Scalar(0, 0, 0, 255);
   let mask = new cv.Mat(oldFrame.rows, oldFrame.cols, oldFrame.type(), zeroEle);
@@ -93,7 +99,7 @@ window.addEventListener("load", function(){
 
           // calculate optical flow
           cv.calcOpticalFlowPyrLK(oldGray, frameGray, p0, p1, st, err, winSize, maxLevel, criteria);
-
+          
           // select good points
           let goodNew = [];
           let goodOld = [];
@@ -112,7 +118,7 @@ window.addEventListener("load", function(){
           cv.add(frame, mask, frame);
 
           cv.imshow('canvasOutput', frame);
-
+          
           // now update the previous frame and previous points
           frameGray.copyTo(oldGray);
           p0.delete(); p0 = null;
@@ -127,6 +133,7 @@ window.addEventListener("load", function(){
           setTimeout(processVideo, delay);
       } catch (err) {
           // utils.printError(err);
+          console.log(err)
           console.error("error is occured");
       }
   };
