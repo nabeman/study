@@ -31,7 +31,7 @@ window.addEventListener("load", function(){
   // スマホのカメラを使用する
   navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
       videoElement2.srcObject = stream;
-      videoElement.addEventListener("canplay", function(){
+      videoElement2.addEventListener("canplay", function(){
           videoElement2.width = videoElement2.videoWidth;
           videoElement2.height = videoElement2.videoHeight;
           // parameters for ShiTomasi corner detection
@@ -62,6 +62,8 @@ window.addEventListener("load", function(){
           let none = new cv.Mat();
           let x = 0;
           let y = 0;
+          p0.data32F[0] = x;
+          p0.data32F[1] = y;
 
           let features = false;
           outputCanvas.addEventListener("click", function(event){
