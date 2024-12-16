@@ -58,7 +58,8 @@ window.addEventListener("load", function(){
   let oldFrame;
   let oldGray = new cv.Mat();
 
-  let p0 = null;
+  // let p0 = null;
+  let p0 = new cv.Mat(1, 1, cv.CV_32FC2);
   let none = new cv.Mat();
 
   let features = false;
@@ -72,9 +73,10 @@ window.addEventListener("load", function(){
 
       let x = click_x - position_x;
       let y = click_y - position_y;
-      p0 = new cv.Mat(1, 1, cv.CV_32FC2);
+      // p0 = new cv.Mat(1, 1, cv.CV_32FC2);
       p0.data32F[0] = x;
       p0.data32F[1] = y;
+      features = true;
   })
 
   // Create a mask image for drawing purposes
@@ -97,12 +99,14 @@ window.addEventListener("load", function(){
               return;
           }
           if(cap == null){
+            console.log(videoElement.videoHeight, videoElement.videoWidth);
             oldFrame = new cv.Mat(videoElement.videoHeight, videoElement.videoWidth, cv.CV_8UC4);
             cap = new cv.VideoCapture(videoElement);
             cap.read(oldFrame);
             // oldFrameをグレースケール化してoldGrayに格納
             cv.cvtColor(oldFrame, oldGray, cv.COLOR_RGB2GRAY);
             mask = new cv.Mat(oldFrame.rows, oldFrame.cols, oldFrame.type(), zeroEle);
+            console.log(videoElement.height, videoElement.width)
             frame = new cv.Mat(videoElement.height, videoElement.width, cv.CV_8UC4);
           }
           let begin = Date.now();
@@ -112,8 +116,13 @@ window.addEventListener("load", function(){
           cv.cvtColor(frame, frameGray, cv.COLOR_RGBA2GRAY);
 
           // calculate optical flow
-          if(p0 != null){
-              cv.calcOpticalFlowPyrLK(oldGray, frameGray, p0, p1, st, err, winSize, maxLevel, criteria);
+          if(features){
+            try{
+                  cv.calcOpticalFlowPyrLK(oldGray, frameGray, p0, p1, st, err, winSize, maxLevel, criteria);
+              }catch(err){
+                  console.log(oldGray);
+                  console.log(frameGray);
+              }
               // select good points
               let goodNew = [];
               let goodOld = [];
