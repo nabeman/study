@@ -9,8 +9,7 @@
   <p id="status">OpenCV.js is loading...</p>
   <div>
     <div class="inputoutput">
-      <video id="videosrc" alt="No Image" src="video/testvideo2.mp4" controls width="1920" height="
-      1080"></video>
+      <video id="videosrc" controls playsinline muted autoplay></video>
       <div class="caption">imageSrc <input type="file" id="fileInput" name="file" /></div>
     </div>
     <div class="inputoutput">
@@ -19,12 +18,26 @@
     </div>
   </div>
 <script type="text/javascript">
-let videoElement = document.getElementById('videosrc');
 let outputCanvas = document.getElementById("canvasOutput");
 
 window.addEventListener("load", function(){
-  let video = document.getElementById('videosrc');
-  let cap = new cv.VideoCapture(video);
+  let videoElement = document.getElementById('videosrc');
+
+  const constraints = {
+    video: true
+  }
+  // スマホのカメラを使用する
+  navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
+      videoElement.srcObject = stream;
+      videoElement.addEventListener("canplay", onVideoCanPlay, false);
+  })
+
+  function onVideoCanPlay(){
+    videoElement.width = videoElement.videoWidth;
+    videoElement.height = videoElement.videoHeight;
+    setTimeout(processVideo, 0);;
+  }
+  let cap = null;
 
   // parameters for ShiTomasi corner detection
   let [maxCorners, qualityLevel, minDistance, blockSize] = [3, 0.3, 7, 7];
@@ -42,17 +55,11 @@ window.addEventListener("load", function(){
   }
 
   // take first frame and find corners in it
-  console.log(cap)
-  let oldFrame = new cv.Mat(video.videoHeight, video.videoWidth, cv.CV_8UC4);
-  cap.read(oldFrame);
+  let oldFrame;
   let oldGray = new cv.Mat();
-  // oldFrameをグレースケール化してoldGrayに格納
-  cv.cvtColor(oldFrame, oldGray, cv.COLOR_RGB2GRAY);
-  let p0 = new cv.Mat(1, 1, cv.CV_32FC2);
-  // let p0 = new cv.Mat();
+
+  let p0 = null;
   let none = new cv.Mat();
-  let x = 0;
-  let y = 0;
 
   let features = false;
   outputCanvas.addEventListener("click", function(event){
@@ -63,20 +70,18 @@ window.addEventListener("load", function(){
       let position_x = client_rect.left + window.pageXOffset;
       let position_y = client_rect.top + window.pageYOffset;
 
-      x = click_x - position_x;
-      y = click_y - position_y;
-      
+      let x = click_x - position_x;
+      let y = click_y - position_y;
+      p0 = new cv.Mat(1, 1, cv.CV_32FC2);
       p0.data32F[0] = x;
       p0.data32F[1] = y;
   })
-  // oldGray に検出した特徴点の座標を記録？
-  cv.goodFeaturesToTrack(oldGray, p0, maxCorners, qualityLevel, minDistance, none, blockSize);
-  console.log(p0.data32F)
+
   // Create a mask image for drawing purposes
   let zeroEle = new cv.Scalar(0, 0, 0, 255);
-  let mask = new cv.Mat(oldFrame.rows, oldFrame.cols, oldFrame.type(), zeroEle);
+  let mask;
 
-  let frame = new cv.Mat(video.height, video.width, cv.CV_8UC4);
+  let frame;
   let frameGray = new cv.Mat();
   let p1 = new cv.Mat();
   let st = new cv.Mat();
@@ -91,6 +96,15 @@ window.addEventListener("load", function(){
               frame.delete(); oldGray.delete(); p0.delete(); p1.delete(); err.delete(); mask.delete();
               return;
           }
+          if(cap == null){
+            oldFrame = new cv.Mat(videoElement.videoHeight, videoElement.videoWidth, cv.CV_8UC4);
+            cap = new cv.VideoCapture(videoElement);
+            cap.read(oldFrame);
+            // oldFrameをグレースケール化してoldGrayに格納
+            cv.cvtColor(oldFrame, oldGray, cv.COLOR_RGB2GRAY);
+            mask = new cv.Mat(oldFrame.rows, oldFrame.cols, oldFrame.type(), zeroEle);
+            frame = new cv.Mat(videoElement.height, videoElement.width, cv.CV_8UC4);
+          }
           let begin = Date.now();
 
           // start processing.
@@ -98,36 +112,38 @@ window.addEventListener("load", function(){
           cv.cvtColor(frame, frameGray, cv.COLOR_RGBA2GRAY);
 
           // calculate optical flow
-          cv.calcOpticalFlowPyrLK(oldGray, frameGray, p0, p1, st, err, winSize, maxLevel, criteria);
-          
-          // select good points
-          let goodNew = [];
-          let goodOld = [];
-          for (let i = 0; i < st.rows; i++) {
-              if (st.data[i] === 1) {
-                  goodNew.push(new cv.Point(p1.data32F[i*2], p1.data32F[i*2+1]));
-                  goodOld.push(new cv.Point(p0.data32F[i*2], p0.data32F[i*2+1]));
+          if(p0 != null){
+              cv.calcOpticalFlowPyrLK(oldGray, frameGray, p0, p1, st, err, winSize, maxLevel, criteria);
+              // select good points
+              let goodNew = [];
+              let goodOld = [];
+              for (let i = 0; i < st.rows; i++) {
+                  if (st.data[i] === 1) {
+                      goodNew.push(new cv.Point(p1.data32F[i*2], p1.data32F[i*2+1]));
+                      goodOld.push(new cv.Point(p0.data32F[i*2], p0.data32F[i*2+1]));
+                  }
               }
-          }
 
-          // draw the tracks
-          for (let i = 0; i < goodNew.length; i++) {
-              cv.line(mask, goodNew[i], goodOld[i], color[i], 2);
-              cv.circle(frame, goodNew[i], 5, color[i], -1);
-          }
-          cv.add(frame, mask, frame);
+              // draw the tracks
+              for (let i = 0; i < goodNew.length; i++) {
+                  cv.line(mask, goodNew[i], goodOld[i], color[i], 2);
+                  cv.circle(frame, goodNew[i], 5, color[i], -1);
+              }
+              cv.add(frame, mask, frame);
 
-          cv.imshow('canvasOutput', frame);
-          
-          // now update the previous frame and previous points
-          frameGray.copyTo(oldGray);
-          p0.delete(); p0 = null;
-          p0 = new cv.Mat(goodNew.length, 1, cv.CV_32FC2);
-          for (let i = 0; i < goodNew.length; i++) {
-              p0.data32F[i*2] = goodNew[i].x;
-              p0.data32F[i*2+1] = goodNew[i].y;
+              cv.imshow('canvasOutput', frame);
+              
+              // now update the previous frame and previous points
+              frameGray.copyTo(oldGray);
+              p0.delete(); p0 = null;
+              p0 = new cv.Mat(goodNew.length, 1, cv.CV_32FC2);
+              for (let i = 0; i < goodNew.length; i++) {
+                  p0.data32F[i*2] = goodNew[i].x;
+                  p0.data32F[i*2+1] = goodNew[i].y;
+              }
+          }else{
+              cv.imshow('canvasOutput', frame);
           }
-
           // schedule the next one.
           let delay = 1000/FPS - (Date.now() - begin);
           setTimeout(processVideo, delay);
@@ -139,7 +155,7 @@ window.addEventListener("load", function(){
   };
   
   // schedule the first one.
-  setTimeout(processVideo, 0);
+  // setTimeout(processVideo, 0);
 });
 
 var Module = {
