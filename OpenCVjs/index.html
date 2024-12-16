@@ -78,7 +78,7 @@ window.addEventListener("load", function(){
       p0.data32F[1] = y;
       features = true;
   })
-
+  cv.goodFeaturesToTrack(oldGray, p0, maxCorners, qualityLevel, minDistance, none, blockSize);
   // Create a mask image for drawing purposes
   let zeroEle = new cv.Scalar(0, 0, 0, 255);
   let mask;
