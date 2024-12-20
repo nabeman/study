@@ -27,7 +27,7 @@ window.addEventListener("load", function(){
   let cap = new cv.VideoCapture(video);
 
   // parameters for ShiTomasi corner detection
-  let [maxCorners, qualityLevel, minDistance, blockSize] = [3, 0.3, 7, 7];
+  let [maxCorners, qualityLevel, minDistance, blockSize] = [1, 0.3, 7, 7];
 
   // parameters for lucas kanade optical flow
   let winSize = new cv.Size(15, 15);
@@ -71,6 +71,7 @@ window.addEventListener("load", function(){
   })
   // oldGray に検出した特徴点の座標を記録？
   cv.goodFeaturesToTrack(oldGray, p0, maxCorners, qualityLevel, minDistance, none, blockSize);
+  console.log(p0)
   console.log(p0.data32F)
   // Create a mask image for drawing purposes
   let zeroEle = new cv.Scalar(0, 0, 0, 255);
