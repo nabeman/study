@@ -10,7 +10,7 @@
   <p id="status">OpenCV.js is loading...</p>
   <div>
     <div class="inputoutput">
-      <video id="videosrc" controls playsinline muted autoplay></video>
+      <video id="videosrc" controls muted autoplay></video>
       <div class="caption">imageSrc <input type="file" id="fileInput" name="file" /></div>
     </div>
     <div class="inputoutput" id="output">
@@ -75,7 +75,7 @@ window.addEventListener("load", function(){
   function onVideoCanPlay(){
     videoElement.width = videoElement.videoWidth;
     videoElement.height = videoElement.videoHeight;
-    setTimeout(processVideo, 0);;
+    setTimeout(processVideo, 0);
   }
   let cap = null;
 
