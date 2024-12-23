@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <title>Hello OpenCV.js</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
   <h2>Hello OpenCV.js</h2>
@@ -12,8 +13,12 @@
       <video id="videosrc" controls playsinline muted autoplay></video>
       <div class="caption">imageSrc <input type="file" id="fileInput" name="file" /></div>
     </div>
-    <div class="inputoutput">
+    <div class="inputoutput" id="output">
       <canvas id="canvasOutput" ></canvas>
+      <input type="button" id="btn" value="false"/>
+      <div class="btn_draw" id="btn_draw">
+          <!-- 描画切り替え用のボタン タッチ操作-->
+      </div>
       <div class="caption">canvasOutput</div>
     </div>
   </div>
@@ -21,6 +26,41 @@
 let outputCanvas = document.getElementById("canvasOutput");
 
 window.addEventListener("load", function(){
+  // 書くかどうかを切り替え
+  let btn = document.getElementById("btn");
+  let btn_value = false;
+  btn.addEventListener("click", function(){
+    btn_value = !btn_value;
+    btn.value = btn_value.toString();
+  })
+  window.addEventListener("keydown", function(event){
+    if(event.key = "a"){
+      btn_value = true;
+      btn.value = btn_value.toString();
+    }
+  })
+  window.addEventListener("keyup", function(event){
+    if(event.key = "a"){
+      btn_value = false;
+      btn.value = btn_value.toString();
+    }
+  })
+  // タッチ操作用切り替えボタン
+  let btn_draw = document.getElementById("btn_draw");
+  btn_draw.addEventListener("touchstart", function(){
+    btn_value = true;
+    btn.value = btn_value.toString();
+    btn_draw.style.backgroundColor = 'rgb(' + 62 + ',' + 132 + ',' + 244 + ')';
+  })
+  btn_draw.addEventListener("touchend", function(){
+    btn_value = false;
+    btn.value = btn_value.toString();
+    btn_draw.style.backgroundColor = 'rgb(' + 20 + ',' + 92 + ',' + 208 + ')';
+  })
+  btn_draw.oncontextmenu = () => {
+    return false;
+  };
+
   let videoElement = document.getElementById('videosrc');
 
   const constraints = {
@@ -145,7 +185,9 @@ window.addEventListener("load", function(){
 
               // draw the tracks
               for (let i = 0; i < goodNew.length; i++) {
+                if(btn_value){
                   cv.line(mask, goodNew[i], goodOld[i], color[i], 2);
+                }
                   cv.circle(frame, goodNew[i], 5, color[i], -1);
               }
               cv.add(frame, mask, frame);

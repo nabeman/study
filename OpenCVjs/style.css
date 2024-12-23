@@ -1,0 +1,12 @@
+.output {
+    display: inline-block;
+}
+
+.btn_draw{
+    display: inline-block;
+    width: 200px;
+    height: 200px;
+    background-color: rgb(20, 92, 208);
+    /* background-color: rgb(62, 132, 244); */
+}
+
