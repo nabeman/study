@@ -64,7 +64,7 @@ window.addEventListener("load", function(){
   let videoElement = document.getElementById('videosrc');
 
   const constraints = {
-    video: true
+    video: { facingMode: "environment" }
   }
   // スマホのカメラを使用する
   navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
