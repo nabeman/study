@@ -1,1 +1,1 @@
-C:\Users\tkmco\study\env\Scripts\activate.bat
+C:\Users\%USERNAME%\study\env\Scripts\activate.bat
