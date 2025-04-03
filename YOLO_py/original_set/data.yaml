@@ -1,3 +1,4 @@
+path: ./original_set
 train: ./train/images
 val: ./valid/images
 test: ./test/images
