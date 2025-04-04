@@ -30,4 +30,4 @@ def save_frame_play(video_path, dir_path, basename, ext='jpg', delay=1, window_n
     cv2.destroyWindow(window_name)
 
 
-save_frame_play('data/temp/pen_sample.mp4', 'data/temp', 'sample_video_cap', delay=0)
+save_frame_play('pen_sample2.mp4', 'temp2', 'sample_video_cap2', delay=0)
