@@ -1,6 +1,6 @@
 from ultralytics import YOLO
 
-model = YOLO("../runs/detect/train3/weights/best.pt")
+model = YOLO("../runs/detect/train/weights/best.pt")
 
 results = model("temp/pen_sample.mp4", save=True)
 
