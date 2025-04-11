@@ -311,3 +311,10 @@ poetry.toml
 pyrightconfig.json
 
 # End of https://www.toptal.com/developers/gitignore/api/python,node
+
+depth_anything_v2_vitb.pth
+depth_anything_v2_vitl.pth
+depth_anything_v2_vits.pth
+
+basketball.mp4
+ferris_wheel.mp4
