@@ -1,0 +1,1 @@
+python run.py --encoder vits --img-path ./images/画像フォルダ --outdir ./images --pred-only
