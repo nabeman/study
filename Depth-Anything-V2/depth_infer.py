@@ -2,8 +2,11 @@ import cv2
 import torch
 import os
 import numpy as np
+import matplotlib
 
 from depth_anything_v2.dpt import DepthAnythingV2
+
+cmap = matplotlib.colormaps.get_cmap('Spectral_r')
 
 encoder = 'vits'
 
@@ -21,9 +24,15 @@ model.load_state_dict(torch.load(f"depth_anything_v2_{encoder}.pth", map_locatio
 model = model.to(DEVICE).eval()
 
 # raw_img = cv2.imread("C:\\Users\\tkmco\\study\\Depth-Anything-V2\\images\\image1.jpg")
-raw_img = cv2.imread("./images/image1.jpg")
+raw_img = cv2.imread("./images/image2.jpg")
 # with torch.no_grad():
 depth = model.infer_image(raw_img)
+
+depth = (depth - depth.min()) / (depth.max() - depth.min()) * 255.0
+depth = depth.astype(np.uint8)
+# カラー化
+depth = (cmap(depth)[:, :, :3] * 255)[:, :, ::-1].astype(np.uint8)
+
 depth = cv2.resize(depth, None, fx=0.5, fy=0.5)
 
 if len(depth.shape) == 3:
