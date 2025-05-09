@@ -1,0 +1,20 @@
+nanameue
+(304, 224)
+
+nanameyoko
+(302, 240)
+
+yoko
+(309, 390)
+
+maue
+(302, 232)
+
+mauefar
+(286, 264)
+
+nottouchfar
+(297, 264)
+
+nottouchnear
+(317, 269)

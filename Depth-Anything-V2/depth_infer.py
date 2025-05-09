@@ -3,8 +3,10 @@ import torch
 import os
 import numpy as np
 import matplotlib
+import time
 
 from depth_anything_v2.dpt import DepthAnythingV2
+from record import Record
 
 cmap = matplotlib.colormaps.get_cmap('Spectral_r')
 
@@ -26,9 +28,12 @@ model = model.to(DEVICE).eval()
 # eval: 評価モードに切り替え
 
 # raw_img = cv2.imread("C:\\Users\\tkmco\\study\\Depth-Anything-V2\\images\\image1.jpg")
-raw_img = cv2.imread("./images/image2.jpg")
+raw_img = cv2.imread("./images/testimages/nottouch_near.jpg")
 # with torch.no_grad():
+start = time.perf_counter()
 depth = model.infer_image(raw_img)
+end = time.perf_counter()
+print("実行時間: {}".format(end - start))
 
 depth_color = (depth - depth.min()) / (depth.max() - depth.min()) * 255.0
 depth_color = depth_color.astype(np.uint8)
@@ -48,11 +53,13 @@ else:
 
 print(depth_color.shape)
 depth = cv2.resize(depth, None, fx=0.25, fy=0.25)
-def onMouse(event, y, x, flags, params):
+def onMouse(event, x, y, flags, params):
     if event == cv2.EVENT_LBUTTONDOWN:
         # print(depth_color[x, y])
         print(x, y)
-        print(depth[x, y])
+        print(depth[y, x])
+
+# Record(317, 269, depth)
 
 cv2.imshow('depth', depth_color)
 cv2.setMouseCallback('depth', onMouse)
