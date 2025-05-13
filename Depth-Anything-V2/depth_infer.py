@@ -36,7 +36,7 @@ print("デバイスの切り替え: {}".format(middle1 - middle4))
 print("middle1までの実行時間: {}".format(middle1 - start1))
 
 # raw_img = cv2.imread("C:\\Users\\tkmco\\study\\Depth-Anything-V2\\images\\image1.jpg")
-raw_img = cv2.imread("./images/testimages/maue_25.jpg")
+raw_img = cv2.imread("./images/testimages/maue_24dpi_25.jpg")
 # with torch.no_grad():
 middle2 = time.perf_counter()
 print("middle2までの実行時間: {}".format(middle2 - middle1))
