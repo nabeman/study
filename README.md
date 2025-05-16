@@ -23,3 +23,18 @@ p5.jsを自分の環境で使う
 ・軌跡の描画を切り替えるボタン
 ・スマートフォンから動かす
 ・書いたものの消去、保存
+
+https://universe.roboflow.com/kitech-tqjyb/pen-detect-ngsot
+@misc{
+                            pen-detect-ngsot_dataset,
+                            title = { Pen detect Dataset },
+                            type = { Open Source Dataset },
+                            author = { KITECH },
+                            howpublished = { \url{ https://universe.roboflow.com/kitech-tqjyb/pen-detect-ngsot } },
+                            url = { https://universe.roboflow.com/kitech-tqjyb/pen-detect-ngsot },
+                            journal = { Roboflow Universe },
+                            publisher = { Roboflow },
+                            year = { 2023 },
+                            month = { nov },
+                            note = { visited on 2025-05-16 },
+                            }
