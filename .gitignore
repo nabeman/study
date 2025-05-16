@@ -316,5 +316,9 @@ depth_anything_v2_vitb.pth
 depth_anything_v2_vitl.pth
 depth_anything_v2_vits.pth
 
+# videos
 basketball.mp4
 ferris_wheel.mp4
+pen_sample.mp4
+pen_sample2.mp4
+sample_video
