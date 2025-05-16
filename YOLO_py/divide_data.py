@@ -3,7 +3,7 @@ import glob
 import os
 import random
 
-dataset_dir="original_set3"
+dataset_dir="original_set4"
 
 #データ一覧
 img_list=glob.glob(os.path.join(dataset_dir+"\labels","*.txt"))
