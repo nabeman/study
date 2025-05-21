@@ -5,6 +5,9 @@ import sys
 import numpy as np
 import matplotlib
 
+# YOLO
+from ultralytics import YOLO
+
 sys.path.append(os.getcwd())
 
 from depth_anything_v2.dpt import DepthAnythingV2
@@ -29,22 +32,40 @@ model = model.to(DEVICE).eval()
 cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 
 def main():
-    
+    yolo_model = YOLO("../runs/detect/train4/weights/best.pt")
+    tip_point = []
+    # mask = None
     while True:
         ret, img = cap.read()
-
+        # new_mask = np.zeros((img.shape[0], img.shape[1]))
         # 深度画像の取得
         depth = model.infer_image(img)
 
-        depth_color = (depth - depth.min()) / (depth.max() - depth.min()) * 255.0
-        depth_color = depth_color.astype(np.uint8)
-        # カラー化
-        depth_color = (cmap(depth_color)[:, :, :3] * 255)[:, :, ::-1].astype(np.uint8)
+        results = yolo_model(img, stream = True)
+        x1, std = None, None
+        for r in results:
+            for box, class_id in zip(r.boxes.xyxy, r.boxes.cls):
+                class_name = r.names[int(class_id)]
+                if class_name == "tip":
+                    x1 = box[0].item()
+                    y1 = box[1].item()
+                    x2 = box[2].item()
+                    y2 = box[3].item()
+        
+        if not x1 == None:
+            std = np.std(depth[(int(y1)-30):(int(y2)+30), (int(x1)-30):(int(x2)+30)])
+            if std < 0.4:
+                tip_point.append([int(x2), int(y2)])
+        if len(tip_point) > 0:
+            for i in range(len(tip_point)-1):
+                cv2.line(img, (tip_point[i][0], tip_point[i][1]), (tip_point[i+1][0], tip_point[i+1][1]), (255, 0, 0), thickness=1)    
 
-        cv2.imshow("Video", depth_color)
+        cv2.imshow("Video", img)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             cv2.destroyAllWindows()
             break
+        elif cv2.waitKey(1) & 0xFF == ord('c'):
+            tip_point = []
 
 if __name__ == "__main__":
     main()
