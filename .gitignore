@@ -325,3 +325,8 @@ sample_video
 
 # dataset
 Pen_detect.v4i.yolov11
+
+images
+labels
+temp2
+temp3
