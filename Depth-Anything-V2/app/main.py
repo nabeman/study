@@ -32,7 +32,7 @@ model = model.to(DEVICE).eval()
 cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 
 def main():
-    yolo_model = YOLO("../runs/detect/train4/weights/best.pt")
+    yolo_model = YOLO("../runs/detect/train7/weights/best.pt")
     tip_point = []
     # mask = None
     while True:
@@ -69,3 +69,14 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+# 接触判定とペン先検出は独立させる
+# 接触(p) -> 非接触(q) -> 接触(r)となる場合
+# pr間に線は引かない
+
+# 接触を細かくしてみる
+# 閾値は0.4 これを細かくして変化を確かめる
+# 簡単に変化を確認するためのインタフェースを実装してもいいかも
+
+# スマホで動くかどうかを確かめる
