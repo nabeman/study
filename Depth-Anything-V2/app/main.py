@@ -57,7 +57,6 @@ def main():
         if not x1 == None: #ペン先が検出された場合ペン先周りの深度のばらつき(標準偏差)を計算
             std = np.std(depth[(int(y1)-30):(int(y2)+30), (int(x1)-30):(int(x2)+30)])
             if std < 0.4: # ペン先が接触していた場合 (深度のばらつきが閾値以下)
-                tip_point.append([int(x2), int(y2)])
                 touch_flag = True
             else:
                 touch_flag = False   
@@ -72,14 +71,15 @@ def main():
         else:
             if len(tip_point) != 0:
                 tip_point.append([])
-
+        print(tip_point)
         # ストロークの描画
         for i in tip_point:
             if len(i) > 1: #接触点が2つ以上保存された場合
+                print(f"i: {i}")
                 for j in range(len(i)-1):
                     cv2.line(img, (i[j][0], i[j][1]), (i[j+1][0], i[j+1][1]), (255, 0, 0), thickness=1)
             elif len(i) == 1:
-                cv2.circle(img, (i[j][0], i[j][1]), 2, (255, 0, 0), thickness=1)
+                cv2.circle(img, (i[0][0], i[0][1]), 1, (255, 0, 0), thickness=1)
 
         cv2.imshow("Video", img)
         if cv2.waitKey(1) & 0xFF == ord('q'):
@@ -101,3 +101,7 @@ if __name__ == "__main__":
 # 簡単に変化を確認するためのインタフェースを実装してもいいかも
 
 # スマホで動くかどうかを確かめる
+
+# ペン先を誤認識した場合の処理
+# 精度を上げる
+# 接触判定処理
