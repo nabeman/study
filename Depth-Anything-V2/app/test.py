@@ -33,7 +33,21 @@ def main():
     img = cv2.imread("app/testimage1.jpg")
     
     if TEST:
-        cv2.line(img, (960, 1600), (960, 2000), (255, 0, 0), thickness=2)
+        print("test")
+        cv2.line(img, (760, 1600), (960, 1600), (255, 0, 0), thickness=3)
+        cv2.line(img, (810, 1650), (1010, 1650), (255, 0, 0), thickness=3)
+        cv2.line(img, (760, 1600), (810, 1650), (255, 0, 0), thickness=3)
+        cv2.line(img, (960, 1600), (1010, 1650), (255, 0, 0), thickness=3)
+        
+        cv2.line(img, (760, 1800), (960, 1800), (255, 0, 0), thickness=3)
+        cv2.line(img, (810, 1850), (1010, 1850), (255, 0, 0), thickness=3)
+        cv2.line(img, (760, 1800), (810, 1850), (255, 0, 0), thickness=3)
+        cv2.line(img, (960, 1800), (1010, 1850), (255, 0, 0), thickness=3)
+
+        cv2.line(img, (760, 1600), (760, 1800), (255, 0, 0), thickness=3)
+        cv2.line(img, (810, 1650), (810, 1850), (255, 0, 0), thickness=3)
+        cv2.line(img, (960, 1600), (960, 1800), (255, 0, 0), thickness=3)
+        cv2.line(img, (1010, 1650), (1010, 1850), (255, 0, 0), thickness=3)
     else:
         depth = model.infer_image(img)
         z_s = depth[1600, 960]
