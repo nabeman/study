@@ -61,23 +61,24 @@ def main():
             else:
                 touch_flag = False   
 
-        # ペン先の座標をストロークごとに保存する処理
+        # ペン先の座標をストロークごとに保存する処理, 深度も保存
         if touch_flag:
             if len(tip_point) != 0:
-                tip_point[len(tip_point)-1].append([int(x2), int(y2)])
+                tip_point[len(tip_point)-1].append([int(x2), int(y2), depth[int(y2), int(x2)]+1])
             else:
                 tip_point.append([])
-                tip_point[0].append([int(x2), int(y2)])
+                tip_point[0].append([int(x2), int(y2), depth[int(y2), int(x2)]+1])
         else:
             if len(tip_point) != 0:
                 tip_point.append([])
-        print(tip_point)
+        
         # ストロークの描画
         for i in tip_point:
             if len(i) > 1: #接触点が2つ以上保存された場合
                 print(f"i: {i}")
                 for j in range(len(i)-1):
-                    cv2.line(img, (i[j][0], i[j][1]), (i[j+1][0], i[j+1][1]), (255, 0, 0), thickness=1)
+                    if i[j][2] > depth[i[j][1], i[j][0]]:
+                        cv2.line(img, (i[j][0], i[j][1]), (i[j+1][0], i[j+1][1]), (255, 0, 0), thickness=1)
             elif len(i) == 1:
                 cv2.circle(img, (i[0][0], i[0][1]), 1, (255, 0, 0), thickness=1)
 

@@ -27,7 +27,7 @@ model = model.to(DEVICE).eval()
 
 cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 
-TEST = True
+TEST = False
 
 def main():
     img = cv2.imread("app/testimage1.jpg")
@@ -54,7 +54,7 @@ def main():
         z_e = depth[2000, 960]
         start = screen_to_camera(960, 1600, z_s*10000)
         end = screen_to_camera(960, 2000, z_e*10000)
-        print(start, end)
+        print(z_s, z_e)
         start = [int(start[0]), int(start[1])]
         end = [int(end[0]), int(end[1])]
         cv2.line(img, start, end, (255, 0, 0), thickness=2)
