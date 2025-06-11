@@ -75,7 +75,6 @@ def main():
         # ストロークの描画
         for i in tip_point:
             if len(i) > 1: #接触点が2つ以上保存された場合
-                print(f"i: {i}")
                 for j in range(len(i)-1):
                     if i[j][2] > depth[i[j][1], i[j][0]]:
                         cv2.line(img, (i[j][0], i[j][1]), (i[j+1][0], i[j+1][1]), (255, 0, 0), thickness=1)
@@ -113,9 +112,14 @@ if __name__ == "__main__":
 
 # やること
 # 1. ペン先検出の精度を上げる
-# 2. 誤認識に対する処理
+# 2. 誤認識に対する処理  
 # 3. 机に張り付く、固定されるような表示方法
-# 4. オクルージョンの実装
-# 5. 軌跡に深度情報を付与
+# 4. オクルージョンの実装 ok
+# 5. 軌跡に深度情報を付与 ok
 
 # 軌跡に深度情報を付与（始点と終点）
+
+# android用にKotlin/Javaを使って書き換える、Unity, Kyveも試す？
+# DepthAnything と OpenCVをKotlinを使って書く
+# Android Studioを試す
+# Pythonコードをもとに書き換える
