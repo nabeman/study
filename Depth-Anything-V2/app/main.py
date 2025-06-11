@@ -44,7 +44,7 @@ def main():
 
         results = yolo_model(img, stream = True)
         x1, y1, x2, y2 = [], [], [], []
-        pen_x, pen_y = None, None
+        std, pen_x, pen_y = None, None, None
         for r in results:
             classes = r.boxes.cls.to('cpu').detach().numpy().copy()
             if 0 in classes: 
@@ -59,18 +59,21 @@ def main():
                     elif class_name == "pen":
                         pen_x = (box[0].item() + box[2].item()) / 2
                         pen_y = box[3].item()
-            if len(x1) > 1:
-                distance_list = [None, None]
-                for i in range(len(x1)):
-                    tip_center_x = (x1[i] + x2[i]) / 2
-                    tip_center_y = (y1[i] + y2[i]) / 2
-                    distance = (pen_x - tip_center_x) ** 2 + (pen_y - tip_center_y) ** 2
-                    if distance_list[0] == None or distance_list[0] > distance:
-                        distance_list = [distance, i]
-                x1 = x1[distance_list[1]]
-                y1 = y1[distance_list[1]]
-                x2 = x2[distance_list[1]]
-                y2 = y2[distance_list[1]]
+                        
+                if len(x1) > 1:
+                    distance_list = [None, None]
+                    for i in range(len(x1)):
+                        tip_center_x = (x1[i] + x2[i]) / 2
+                        tip_center_y = (y1[i] + y2[i]) / 2
+                        distance = (pen_x - tip_center_x) ** 2 + (pen_y - tip_center_y) ** 2
+                        if distance_list[0] == None or distance_list[0] > distance:
+                            distance_list = [distance, i]
+                    x1 = x1[distance_list[1]]
+                    y1 = y1[distance_list[1]]
+                    x2 = x2[distance_list[1]]
+                    y2 = y2[distance_list[1]]
+                elif len(x1) == 1:
+                    x1, y1, x2, y2 = x1[0], y1[0], x2[0], y2[0]
         
         if not x1 == []: #ペン先が検出された場合ペン先周りの深度のばらつき(標準偏差)を計算
             std = np.std(depth[(int(y1)-30):(int(y2)+30), (int(x1)-30):(int(x2)+30)])
