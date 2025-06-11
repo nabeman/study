@@ -44,7 +44,7 @@ def main():
 
         results = yolo_model(img, stream = True)
         x1, y1, x2, y2 = [], [], [], []
-        pen_x, pen_y = None
+        pen_x, pen_y = None, None
         for r in results:
             classes = r.boxes.cls.to('cpu').detach().numpy().copy()
             if 0 in classes: 
