@@ -5,10 +5,10 @@ if __name__ == "__main__":
     model = YOLO("../runs/detect/train7/weights/best.pt")
 
     results = model(0, stream = True)
+    x1, y1, x2, y2 = [], [], [], []
+    pen_x, pen_y = None
     for r in results:
         classes = r.boxes.cls.to('cpu').detach().numpy().copy()
-        x1, y1, x2, y2 = [], [], [], []
-        pen_x, pen_y = None
         if 0 in classes: 
             for box, class_id in zip(r.boxes.xyxy, r.boxes.cls):
                 class_name = r.names[int(class_id)]

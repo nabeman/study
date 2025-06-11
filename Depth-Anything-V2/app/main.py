@@ -43,23 +43,43 @@ def main():
         depth = model.infer_image(img)
 
         results = yolo_model(img, stream = True)
-        x1, std = None, None
+        x1, y1, x2, y2 = [], [], [], []
+        pen_x, pen_y = None
         for r in results:
-            for box, class_id in zip(r.boxes.xyxy, r.boxes.cls):
-                class_name = r.names[int(class_id)]
-                if class_name == "tip":
-                    # ペン先が検出された場合、ボックスの左上と右下の座標を取得
-                    x1 = box[0].item()
-                    y1 = box[1].item()
-                    x2 = box[2].item()
-                    y2 = box[3].item()
+            classes = r.boxes.cls.to('cpu').detach().numpy().copy()
+            if 0 in classes: 
+                for box, class_id in zip(r.boxes.xyxy, r.boxes.cls):
+                    class_name = r.names[int(class_id)]
+                    count = 0
+                    if class_name == "tip":
+                        x1.append(box[0].item())
+                        y1.append(box[1].item())
+                        x2.append(box[2].item())
+                        y2.append(box[3].item())
+                    elif class_name == "pen":
+                        pen_x = (box[0].item() + box[2].item()) / 2
+                        pen_y = box[3].item()
+            if len(x1) > 1:
+                distance_list = [None, None]
+                for i in range(len(x1)):
+                    tip_center_x = (x1[i] + x2[i]) / 2
+                    tip_center_y = (y1[i] + y2[i]) / 2
+                    distance = (pen_x - tip_center_x) ** 2 + (pen_y - tip_center_y) ** 2
+                    if distance_list[0] == None or distance_list[0] > distance:
+                        distance_list = [distance, i]
+                x1 = x1[distance_list[1]]
+                y1 = y1[distance_list[1]]
+                x2 = x2[distance_list[1]]
+                y2 = y2[distance_list[1]]
         
-        if not x1 == None: #ペン先が検出された場合ペン先周りの深度のばらつき(標準偏差)を計算
+        if not x1 == []: #ペン先が検出された場合ペン先周りの深度のばらつき(標準偏差)を計算
             std = np.std(depth[(int(y1)-30):(int(y2)+30), (int(x1)-30):(int(x2)+30)])
             if std < 0.4: # ペン先が接触していた場合 (深度のばらつきが閾値以下)
                 touch_flag = True
             else:
                 touch_flag = False   
+        else:
+            touch_flag = False
 
         # ペン先の座標をストロークごとに保存する処理, 深度も保存
         if touch_flag:
